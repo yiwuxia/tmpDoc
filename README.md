@@ -1,12 +1,25 @@
-关于最左索引原理
-新建一张表： id为主键， (username,good_id为联合主键)
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(20) DEFAULT NULL,
-  `good_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `index_p_a` (`username`,`good_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT
+内部培训
 
+提纲；
 
+innodb 索引结构
+	为什么采用B+树 为什么不采用其他结构，二叉树，B树，Hash. 数据的查询速度主要耗时在磁盘寻址，如果采用二叉树（之前一直很好奇，B+树的一个节点可以有多个子节点，一次可以全部读取到内存，我二叉树虽然一个节点只有2个子节点。那一次读取时为什么不能多读取些节点），由于节点并不是在一个数据块上，而是分散在各处。一个读取操作可能只能得到几个有用的数据，当树的高度很大的，磁盘操作次数很大，B树的每个节点存储有完整的数据，这样导致树的高度比较高，而且b树的数据遍历需要遍历整棵树，代价比较大，至于hash，适合等值查找，不适合对于范围查询和排序（适合内存操作）。
+	从表文件来看索引结构
+        展示索引示意图，主键索引和普通索引
+示例表：
+CREATE TABLE `t_demo` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `K` int(11) NOT NULL,
+  `Name` varchar(16) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `index_k` (`K`)
+) ENGINE=InnoDB AUTO_INCREMENT=2601 DEFAULT CHARSET=utf8
+
+高性能索引构建
+	独立的列：列不能是函数的一部分，也不能是函数的参数。
+
+最左索引原则原理
+	事先准备（a,b） 1000条数据 a的数据随机，b有序。
+sql优化改写建议工具介绍soar
+	环境搭建，如何使用
 
